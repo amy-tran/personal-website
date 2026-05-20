@@ -126,7 +126,7 @@
       align-items: start;
     }
     .hero-text {
-      margin-top: 15px;
+      margin-top: 5px;
     }
     .hero-text h1 {
       font-family: var(--serif);
@@ -421,12 +421,27 @@
     .work-skills {
       display: flex; flex-wrap: wrap; gap: 6px;
     }
+    .view-posters-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 14px;
+      font-size: 14px;
+      color: var(--muted);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: none;
+      transition: color 0.2s;
+    }
+    .view-posters-btn:hover, .view-posters-btn.active { color: var(--text); }
     .work-posters {
-      display: flex;
+      display: none;
       flex-direction: column;
       gap: 20px;
-      margin-top: 20px;
+      margin-top: 16px;
     }
+    .work-posters.open { display: flex; }
     .work-poster-label {
       display: block;
       font-size: 14px;
@@ -736,7 +751,7 @@
       .mobile-only { display: inline; }
 
       #cursor { display: none; }
-      html, a, button, .work-header, .boxie-wrap, .contact-boxie, .contact-link, .cert-link, .hero-connect, .nav-logo, .work-resume-link { cursor: auto; }
+      html, a, button, .work-header, .boxie-wrap, .contact-boxie, .contact-link, .cert-link, .hero-connect, .nav-logo, .work-resume-link, .view-posters-btn { cursor: auto; }
       .boxie-stats::after { display: none; }
     }
   </style>
@@ -1016,10 +1031,27 @@
           <div class="work-body-inner">
             <p class="work-desc">${job.desc}</p>
             <div class="work-skills">${job.skills.map(s => `<span class="skill-tag">${s}</span>`).join('')}</div>
-            ${job.posters ? `<div class="work-posters">${job.posters.map(p => `<div class="work-poster"><span class="work-poster-label">${p.label}</span><img src="${p.src}" alt="${p.label}" /></div>`).join('')}</div>` : ''}
+            ${job.posters ? `
+              <button class="view-posters-btn">
+                View research posters
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="work-posters">
+                ${job.posters.map(p => `<div class="work-poster"><span class="work-poster-label">${p.label}</span><img src="${p.src}" alt="${p.label}" /></div>`).join('')}
+              </div>` : ''}
           </div>
         </div>
       `;
+      if (job.posters) {
+        const btn = item.querySelector('.view-posters-btn');
+        const panel = item.querySelector('.work-posters');
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = panel.classList.contains('open');
+          panel.classList.toggle('open', !isOpen);
+          btn.classList.toggle('active', !isOpen);
+        });
+      }
       item.querySelector('.work-header').addEventListener('click', () => {
         const isOpen = item.classList.contains('open');
         const anyOpen = document.querySelector('.work-item.open');
