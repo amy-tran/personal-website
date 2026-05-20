@@ -254,6 +254,7 @@
       transform-origin: center center;
     }
     .boxie-wrap:hover img { transform: rotate(360deg); }
+    .boxie-wrap.spin img { transform: rotate(360deg); }
     .boxie-stats {
       position: absolute;
       bottom: calc(100% + 14px);
@@ -1078,6 +1079,12 @@
     document.querySelectorAll('a, button, .work-header, .boxie-wrap, .contact-boxie').forEach(el => {
       el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
       el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
+
+    /* ── Boxie caption tap-to-spin (mobile) ── */
+    document.querySelector('.boxie-caption-text').addEventListener('click', () => {
+      heroBoxie.classList.add('spin');
+      setTimeout(() => heroBoxie.classList.remove('spin'), 700);
     });
 
     /* ── Contact Boxie click-to-copy ── */
