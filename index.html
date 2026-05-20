@@ -1062,8 +1062,8 @@
     heroBoxie.addEventListener('click', (e) => {
       e.stopPropagation();
       if (isMobile()) {
-        const isOpen = mobileStatsPanel.classList.contains('open');
-        toggleBoxieStats(!isOpen);
+        heroBoxie.classList.add('spin');
+        setTimeout(() => heroBoxie.classList.remove('spin'), 700);
       } else {
         toggleBoxieStats(!heroBoxie.classList.contains('open'));
       }
