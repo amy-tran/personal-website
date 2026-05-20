@@ -479,36 +479,6 @@
       transform-origin: center bottom;
     }
     .contact-boxie:hover img { transform: rotate(360deg); }
-    .contact-boxie-bubble {
-      position: absolute;
-      bottom: calc(100% + 8px);
-      left: 50%;
-      transform: translateX(-50%) translateY(6px);
-      background: var(--blue-light);
-      color: var(--text);
-      font-size: 14px;
-      font-family: var(--sans);
-      padding: 6px 12px;
-      border-radius: 20px;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .contact-boxie-bubble::after {
-      content: '';
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      border: 5px solid transparent;
-      border-top-color: var(--blue-light);
-    }
-    .contact-boxie:hover .contact-boxie-bubble,
-    .contact-boxie.copied .contact-boxie-bubble {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
 
     /* ── Footer ── */
     footer {
@@ -736,7 +706,7 @@
         Resume
       </a>
       <div class="contact-boxie">
-        <div class="contact-boxie-bubble">Got a dataset? 👀</div>
+
         <img src="boxie.png" alt="Boxie" />
       </div>
     </div>
@@ -932,17 +902,8 @@
     });
 
     /* ── Contact Boxie click-to-copy ── */
-    const contactBoxie = document.querySelector('.contact-boxie');
-    const contactBubble = contactBoxie.querySelector('.contact-boxie-bubble');
-    contactBoxie.addEventListener('click', () => {
-      if (contactBoxie.classList.contains('copied')) {
-        contactBoxie.classList.remove('copied');
-        contactBubble.textContent = 'Got a dataset? 👀';
-      } else {
-        navigator.clipboard.writeText('tranamy@berkeley.edu');
-        contactBubble.textContent = 'Email copied! 📋';
-        contactBoxie.classList.add('copied');
-      }
+    document.querySelector('.contact-boxie').addEventListener('click', () => {
+      navigator.clipboard.writeText('tranamy@berkeley.edu');
     });
 
     /* ── Hamburger menu ── */
