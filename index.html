@@ -44,19 +44,7 @@
       transform: translate(-50%, -50%);
       transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
     }
-    #cursor-ring {
-      position: fixed;
-      width: 32px; height: 32px;
-      border: 1.5px solid var(--blue);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%, -50%);
-      transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
-      opacity: 0.5;
-    }
     body.hovering #cursor { width: 14px; height: 14px; background: var(--blue); }
-    body.hovering #cursor-ring { width: 44px; height: 44px; opacity: 0.3; }
 
     /* ── Navbar ── */
     nav {
@@ -172,6 +160,31 @@
       transition: border-color 0.2s;
     }
     .hero-connect:hover { border-color: var(--blue); }
+    .hero-connect-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .hero-connect-row .hero-connect { margin-top: 0; }
+    .key-metrics-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      background: transparent;
+      cursor: none;
+      transition: border-color 0.2s, background 0.2s;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .key-metrics-btn:hover { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+    .key-metrics-btn.active { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
 
     /* Hero image + Boxie */
     .hero-image-wrap {
@@ -430,16 +443,16 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      border: 1px solid var(--blue);
-      color: var(--blue);
+      border: 1px solid rgba(0,0,0,0.15);
+      color: var(--text);
       border-radius: 20px;
       padding: 2px 10px;
       font-size: 12px;
       text-decoration: none;
       cursor: none;
-      transition: background 0.2s;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
     }
-    .cert-link:hover { background: var(--blue-light); }
+    .cert-link:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
 
     /* ── Skills ── */
     #skills { padding-top: 80px; padding-bottom: 16px; }
@@ -500,11 +513,11 @@
       align-items: center;
       gap: 8px;
       padding: 0px 18px;
-      border: 1px solid var(--blue);
+      border: 1px solid rgba(0,0,0,0.15);
       border-radius: 25px;
       font-size: 14px;
       font-weight: 500;
-      color: var(--blue);
+      color: var(--text);
       text-decoration: none;
       cursor: none;
       transition: border-color 0.2s, color 0.2s, background 0.2s;
@@ -677,7 +690,7 @@
       footer span:last-child { text-align: right; }
       .mobile-only { display: inline; }
 
-      #cursor, #cursor-ring { display: none; }
+      #cursor { display: none; }
       html, a, button, .work-header, .boxie-wrap, .contact-boxie, .contact-link, .cert-link, .hero-connect, .nav-logo { cursor: auto; }
     }
   </style>
@@ -686,7 +699,6 @@
 
   <!-- Custom Cursor -->
   <div id="cursor"></div>
-  <div id="cursor-ring"></div>
 
   <!-- Navbar -->
   <nav id="navbar">
@@ -717,7 +729,13 @@
       <p>I studied Data Science and Social Welfare at UC Berkeley, two fields that share a question I keep returning to: what do the systems we build actually do to people?</p>
       <p>Before SoFi, I worked on generative AI at Credit Karma, baseball analytics in the Oakland A's front office, and reinforcement learning research at Berkeley.</p>
       <p>Outside of work I lift, arrange flowers, and wander through museums. </p>
-      <a href="#contact" class="hero-connect">Always happy to connect!</a>
+      <div class="hero-connect-row">
+        <a href="#contact" class="hero-connect">Always happy to connect!</a>
+        <button class="key-metrics-btn" id="keyMetricsBtn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          key metrics
+        </button>
+      </div>
     </div>
     <div class="hero-image-wrap reveal">
       <div class="hero-photo-container">
@@ -776,7 +794,7 @@
   <!-- Contact -->
   <section id="contact">
     <div class="section-label">Contact</div>
-    <h3>Happy to talk data, swap lifting tips, or just say hello!</h3>
+    <h3>Always happy to connect.</h3>
     <div class="contact-links reveal">
       <a href="mailto:tranamy@berkeley.edu" class="contact-link">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -975,22 +993,26 @@
 
     /* ── Custom Cursor ── */
     const cursor = document.getElementById('cursor');
-    const ring = document.getElementById('cursor-ring');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    function animateCursor() {
-      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
-      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-      requestAnimationFrame(animateCursor);
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+    const heroBoxie = document.getElementById('heroBoxie');
+    const keyMetricsBtn = document.getElementById('keyMetricsBtn');
+    function toggleBoxieStats(open) {
+      heroBoxie.classList.toggle('open', open);
+      keyMetricsBtn.classList.toggle('active', open);
     }
-    animateCursor();
-    document.getElementById('heroBoxie').addEventListener('click', (e) => {
+    heroBoxie.addEventListener('click', (e) => {
       e.stopPropagation();
-      document.getElementById('heroBoxie').classList.toggle('open');
+      toggleBoxieStats(!heroBoxie.classList.contains('open'));
+    });
+    keyMetricsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleBoxieStats(!heroBoxie.classList.contains('open'));
     });
     document.addEventListener('click', () => {
-      document.getElementById('heroBoxie').classList.remove('open');
+      toggleBoxieStats(false);
     });
     document.querySelectorAll('a, button, .work-header, .boxie-wrap, .contact-boxie').forEach(el => {
       el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
