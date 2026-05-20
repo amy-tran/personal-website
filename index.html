@@ -209,6 +209,59 @@
       transform-origin: center center;
     }
     .boxie-wrap:hover img { transform: rotate(360deg); }
+    .boxie-stats {
+      position: absolute;
+      bottom: calc(100% + 14px);
+      left: 50%;
+      transform: translateX(-50%) translateY(6px);
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 6px 0;
+      min-width: 240px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .boxie-stats::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 8px solid transparent;
+      border-top-color: #1a1a1a;
+    }
+    .boxie-stats-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-left: 8px;
+      padding-right: 8px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .boxie-stats-row:last-child { border-bottom: none; }
+    .boxie-stats-label {
+      font-family: var(--sans);
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 400;
+    }
+    .boxie-stats-value {
+      font-family: var(--sans);
+      font-size: 12px;
+      color: #fff;
+      font-weight: 600;
+    }
+    .boxie-wrap.open .boxie-stats {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
     .boxie-caption {
       display: flex;
       align-items: flex-start;
@@ -446,12 +499,12 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 5px 18px;
+      padding: 0px 18px;
       border: 1px solid var(--blue);
       border-radius: 25px;
       font-size: 14px;
       font-weight: 500;
-      color: var(--text);
+      color: var(--blue);
       text-decoration: none;
       cursor: none;
       transition: border-color 0.2s, color 0.2s, background 0.2s;
@@ -481,15 +534,16 @@
     .contact-boxie:hover img { transform: rotate(360deg); }
     .contact-boxie-bubble {
       position: absolute;
-      bottom: calc(100% + 8px);
+      bottom: calc(100% + 14px);
       left: 50%;
       transform: translateX(-50%) translateY(6px);
-      background: var(--blue-light);
-      color: var(--text);
-      font-size: 14px;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 12px;
       font-family: var(--sans);
+      font-weight: 400;
       padding: 6px 12px;
-      border-radius: 20px;
+      border-radius: 12px;
       white-space: nowrap;
       opacity: 0;
       pointer-events: none;
@@ -501,8 +555,8 @@
       top: 100%;
       left: 50%;
       transform: translateX(-50%);
-      border: 5px solid transparent;
-      border-top-color: var(--blue-light);
+      border: 8px solid transparent;
+      border-top-color: #1a1a1a;
     }
     .contact-boxie.copied .contact-boxie-bubble {
       opacity: 1;
@@ -668,7 +722,13 @@
     <div class="hero-image-wrap reveal">
       <div class="hero-photo-container">
         <img class="hero-photo" src="amy-photo.jpg" alt="Amy Tran" onerror="this.style.background='#e8eef7'" />
-        <div class="boxie-wrap" onclick="document.querySelector('#work').scrollIntoView({behavior:'smooth'})" style="cursor:pointer;">
+        <div class="boxie-wrap" id="heroBoxie" style="cursor:pointer;">
+          <div class="boxie-stats">
+            <div class="boxie-stats-row"><span class="boxie-stats-label">Complaints classifier</span><span class="boxie-stats-value">94% accuracy</span></div>
+            <div class="boxie-stats-row"><span class="boxie-stats-label">Pitcher deception model</span><span class="boxie-stats-value">91% accuracy</span></div>
+            <div class="boxie-stats-row"><span class="boxie-stats-label">Processing time reduced</span><span class="boxie-stats-value">87% faster</span></div>
+            <div class="boxie-stats-row"><span class="boxie-stats-label">Analyst reports evaluated</span><span class="boxie-stats-value">480+</span></div>
+          </div>
           <img src="boxie.png" alt="Boxie" />
         </div>
       </div>
@@ -735,7 +795,7 @@
         Resume
       </a>
       <div class="contact-boxie">
-        <div class="contact-boxie-bubble">Email copied to clipboard!</div>
+        <div class="contact-boxie-bubble">Email copied!</div>
         <img src="boxie.png" alt="Boxie" />
       </div>
     </div>
@@ -925,6 +985,13 @@
       requestAnimationFrame(animateCursor);
     }
     animateCursor();
+    document.getElementById('heroBoxie').addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('heroBoxie').classList.toggle('open');
+    });
+    document.addEventListener('click', () => {
+      document.getElementById('heroBoxie').classList.remove('open');
+    });
     document.querySelectorAll('a, button, .work-header, .boxie-wrap, .contact-boxie').forEach(el => {
       el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
       el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
