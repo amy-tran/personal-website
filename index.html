@@ -522,6 +522,8 @@
       max-width: 100%;
     }
 
+    .mobile-only { display: none; }
+
     /* ── Back to Top ── */
     #back-top {
       position: fixed;
@@ -620,6 +622,7 @@
       .contact-boxie img { height: 55px; }
       footer { align-items: flex-start; }
       footer span:last-child { text-align: right; }
+      .mobile-only { display: inline; }
 
       #cursor, #cursor-ring { display: none; }
       html, a, button, .work-header, .boxie-wrap, .contact-boxie, .contact-link, .cert-link, .hero-connect, .nav-logo { cursor: auto; }
@@ -816,7 +819,7 @@
         company: "Berkeley Operations and Behavioral Analytics Lab",
         title: "ML Research Assistant",
         date: "September 2023 – August 2024",
-        desc: "Researched how reinforcement learning can surface interpretable insights to improve human decision-making, using clustering and Markov decision processes to model behavioral patterns from experimental data in the Berkeley Operations and Behavioral Analytics Lab. Contributed to research published in Management Science.",
+        desc: "Researched how reinforcement learning can surface interpretable insights to improve human decision-making, using clustering and Markov decision processes to model behavioral patterns from experimental data<span class=\"mobile-only\"> in the Berkeley Operations and Behavioral Analytics Lab</span>. Contributed to research published in Management Science.",
         skills: ["Python", "Pandas", "scikit-learn", "K-Means", "Markov Decision Processes"]
       },
       {
