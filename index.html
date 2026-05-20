@@ -277,6 +277,7 @@
       margin-top: -18px;
     }
     .work-date-short { display: none; }
+    .work-company-short { display: none; }
 
     .work-toggle-icon {
       width: 20px; height: 20px;
@@ -446,7 +447,7 @@
       align-items: center;
       gap: 8px;
       padding: 5px 18px;
-      border: 1.5px solid var(--border);
+      border: 1px solid var(--blue);
       border-radius: 25px;
       font-size: 14px;
       font-weight: 500;
@@ -599,9 +600,12 @@
     .mobile-menu a:hover { color: var(--blue); }
 
     @media (max-width: 720px) {
-      #home { grid-template-columns: 1fr; padding-top: 120px; }
-      .hero-image-wrap { order: -1; display: flex; flex-direction: column; align-items: center; }
+      #home { grid-template-columns: 1fr; padding-top: 120px; justify-items: center; }
+      .hero-image-wrap { order: -1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      .hero-photo-container { max-width: 260px; width: 100%; }
       .hero-photo { max-width: 260px; }
+      .boxie-caption { max-width: 260px; padding-left: 60px; box-sizing: border-box; }
+      .boxie-caption-text { max-width: calc(260px / 3); word-wrap: break-word; }
       .skill-row { flex-direction: column; gap: 10px; }
       .skill-row-label { min-width: unset; }
       .edu-card { flex-direction: column; }
@@ -610,6 +614,8 @@
       .hamburger { display: flex; }
       .work-date-full { display: none; }
       .work-date-short { display: inline; }
+      .work-company-full { display: none; }
+      .work-company-short { display: inline; }
     }
   </style>
 </head>
@@ -741,6 +747,15 @@
 
   <script>
     /* ── Helpers ── */
+    const companyShortNames = {
+      "Oakland Athletics": "Oakland A's",
+      "Berkeley Operations and Behavioral Analytics Lab": "Berkeley Lab",
+      "Intuit Credit Karma": "Credit Karma"
+    };
+    function shortCompany(name) {
+      return companyShortNames[name] || name;
+    }
+
     function abbreviateMonths(str) {
       return str
         .replace(/January/g, 'Jan').replace(/February/g, 'Feb').replace(/March/g, 'Mar')
@@ -794,7 +809,7 @@
         company: "Berkeley Operations and Behavioral Analytics Lab",
         title: "ML Research Assistant",
         date: "September 2023 – August 2024",
-        desc: "Researched how reinforcement learning can surface interpretable insights to improve human decision-making, using clustering and Markov decision processes to model behavioral patterns from experimental data. Contributed to research published in Management Science.",
+        desc: "Researched how reinforcement learning can surface interpretable insights to improve human decision-making, using clustering and Markov decision processes to model behavioral patterns from experimental data in the Berkeley Operations and Behavioral Analytics Lab. Contributed to research published in Management Science.",
         skills: ["Python", "Pandas", "scikit-learn", "K-Means", "Markov Decision Processes"]
       },
       {
@@ -834,7 +849,8 @@
       item.innerHTML = `
         <div class="work-header">
           <div class="work-header-left">
-            <span class="work-company">${job.company}</span>
+            <span class="work-company work-company-full">${job.company}</span>
+            <span class="work-company work-company-short">${shortCompany(job.company)}</span>
             <span class="work-title">${job.title}</span>
           </div>
           <div class="work-header-right">
