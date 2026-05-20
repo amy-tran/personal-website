@@ -185,6 +185,38 @@
     }
     .key-metrics-btn:hover { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
     .key-metrics-btn.active { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+    .mobile-stats-panel {
+      display: none;
+    }
+    @media (max-width: 720px) {
+      .mobile-stats-panel {
+        display: block;
+        background: #1a1a1a;
+        border-radius: 12px;
+        padding: 6px 0;
+        margin-top: 10px;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.2s ease;
+        margin-top: 0;
+      }
+      .mobile-stats-panel.open {
+        max-height: 200px;
+        opacity: 1;
+        margin-top: 10px;
+      }
+      .mobile-stats-header {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 8px 6px;
+        font-size: 11px;
+        font-weight: 500;
+        color: rgba(255,255,255,0.4);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+    }
 
     /* Hero image + Boxie */
     .hero-image-wrap {
@@ -692,6 +724,7 @@
 
       #cursor { display: none; }
       html, a, button, .work-header, .boxie-wrap, .contact-boxie, .contact-link, .cert-link, .hero-connect, .nav-logo { cursor: auto; }
+      .boxie-stats::after { display: none; }
     }
   </style>
 </head>
@@ -735,6 +768,16 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
           key metrics
         </button>
+      </div>
+      <div class="mobile-stats-panel" id="mobileStatsPanel">
+        <div class="mobile-stats-header">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          key metrics
+        </div>
+        <div class="boxie-stats-row"><span class="boxie-stats-label">Complaints classifier</span><span class="boxie-stats-value">94% accuracy</span></div>
+        <div class="boxie-stats-row"><span class="boxie-stats-label">Pitcher deception model</span><span class="boxie-stats-value">91% accuracy</span></div>
+        <div class="boxie-stats-row"><span class="boxie-stats-label">Processing time reduced</span><span class="boxie-stats-value">87% faster</span></div>
+        <div class="boxie-stats-row"><span class="boxie-stats-label">Analyst reports evaluated</span><span class="boxie-stats-value">480+</span></div>
       </div>
     </div>
     <div class="hero-image-wrap reveal">
@@ -999,17 +1042,35 @@
     });
     const heroBoxie = document.getElementById('heroBoxie');
     const keyMetricsBtn = document.getElementById('keyMetricsBtn');
+    const mobileStatsPanel = document.getElementById('mobileStatsPanel');
+    function isMobile() { return window.innerWidth <= 720; }
     function toggleBoxieStats(open) {
-      heroBoxie.classList.toggle('open', open);
-      keyMetricsBtn.classList.toggle('active', open);
+      if (isMobile()) {
+        mobileStatsPanel.classList.toggle('open', open);
+        keyMetricsBtn.classList.toggle('active', open);
+        if (open) {
+          const row = document.querySelector('.hero-connect-row');
+          const top = row.getBoundingClientRect().top + window.scrollY - 100;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      } else {
+        heroBoxie.classList.toggle('open', open);
+        keyMetricsBtn.classList.toggle('active', open);
+      }
     }
     heroBoxie.addEventListener('click', (e) => {
       e.stopPropagation();
-      toggleBoxieStats(!heroBoxie.classList.contains('open'));
+      if (isMobile()) {
+        const isOpen = mobileStatsPanel.classList.contains('open');
+        toggleBoxieStats(!isOpen);
+      } else {
+        toggleBoxieStats(!heroBoxie.classList.contains('open'));
+      }
     });
     keyMetricsBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      toggleBoxieStats(!heroBoxie.classList.contains('open'));
+      const isOpen = isMobile() ? mobileStatsPanel.classList.contains('open') : heroBoxie.classList.contains('open');
+      toggleBoxieStats(!isOpen);
     });
     document.addEventListener('click', () => {
       toggleBoxieStats(false);
