@@ -276,6 +276,8 @@
       white-space: nowrap;
       margin-top: -18px;
     }
+    .work-date-short { display: none; }
+
     .work-toggle-icon {
       width: 20px; height: 20px;
       display: flex; align-items: center; justify-content: center;
@@ -547,15 +549,67 @@
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
     /* ── Responsive ── */
+    /* ── Hamburger ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 32px;
+      height: 32px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .hamburger span {
+      display: block;
+      height: 2px;
+      width: 100%;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 57px;
+      left: 0; right: 0;
+      background: rgba(251,251,251,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 99;
+      flex-direction: column;
+      padding: 12px 0 20px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      padding: 14px 6vw;
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--blue); }
+
     @media (max-width: 720px) {
       #home { grid-template-columns: 1fr; padding-top: 120px; }
-      .hero-image-wrap { order: -1; }
+      .hero-image-wrap { order: -1; display: flex; flex-direction: column; align-items: center; }
       .hero-photo { max-width: 260px; }
       .skill-row { flex-direction: column; gap: 10px; }
       .skill-row-label { min-width: unset; }
       .edu-card { flex-direction: column; }
       nav { padding: 16px 5vw; }
-      .nav-links { gap: 20px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .work-date-full { display: none; }
+      .work-date-short { display: inline; }
     }
   </style>
 </head>
@@ -576,7 +630,16 @@
       <li><a href="#skills">Skills</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#work" class="mobile-nav-link">Work Experience</a>
+    <a href="#education" class="mobile-nav-link">Education</a>
+    <a href="#skills" class="mobile-nav-link">Skills</a>
+    <a href="#contact" class="mobile-nav-link">Contact</a>
+  </div>
 
   <!-- Hero -->
   <section id="home">
@@ -677,6 +740,15 @@
   </button>
 
   <script>
+    /* ── Helpers ── */
+    function abbreviateMonths(str) {
+      return str
+        .replace(/January/g, 'Jan').replace(/February/g, 'Feb').replace(/March/g, 'Mar')
+        .replace(/April/g, 'Apr').replace(/May/g, 'May').replace(/June/g, 'Jun')
+        .replace(/July/g, 'Jul').replace(/August/g, 'Aug').replace(/September/g, 'Sept')
+        .replace(/October/g, 'Oct').replace(/November/g, 'Nov').replace(/December/g, 'Dec');
+    }
+
     /* ── Data ── */
     const workData = [
       {
@@ -766,7 +838,8 @@
             <span class="work-title">${job.title}</span>
           </div>
           <div class="work-header-right">
-            <span class="work-date">${job.date}</span>
+            <span class="work-date work-date-full">${job.date}</span>
+            <span class="work-date work-date-short">${abbreviateMonths(job.date)}</span>
             <div class="work-toggle-icon">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M2 4l4 4 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -844,6 +917,20 @@
         contactBubble.textContent = 'Email copied! 📋';
         contactBoxie.classList.add('copied');
       }
+    });
+
+    /* ── Hamburger menu ── */
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+      });
     });
 
     /* ── Navbar scroll ── */
