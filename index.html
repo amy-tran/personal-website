@@ -502,6 +502,7 @@
       border: 5px solid transparent;
       border-top-color: var(--blue);
     }
+    .contact-boxie:hover .contact-boxie-bubble,
     .contact-boxie.copied .contact-boxie-bubble {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
@@ -584,7 +585,7 @@
       <p>I'm an incoming Data Scientist at SoFi, where I will be building machine learning models for risk analytics and fraud detection.</p>
       <p>I studied Data Science and Social Welfare at UC Berkeley, two fields that share a question I keep returning to: what do the systems we build actually do to people?</p>
       <p>Before SoFi, I worked on generative AI at Credit Karma, baseball analytics in the Oakland A's front office, and reinforcement learning research at Berkeley.</p>
-      <p>Outside of work I enjoy lifting, arranging flowers, and wandering through museums. </p>
+      <p>Outside of work I lift, arrange flowers, and wander through museums. </p>
       <a href="#contact" class="hero-connect">Always happy to connect!</a>
     </div>
     <div class="hero-image-wrap reveal">
@@ -625,7 +626,7 @@
           <a class="cert-link" href="https://certification.wallstreetprep.com/f0d3afbd-aeee-4155-b76c-582e92580a9d#acc.i1vdTGCu" target="_blank"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Wall Street Prep (Excel)</a>
         </div>
       </div>
-      <div class="edu-date">May 2026</div>
+      <!-- <div class="edu-date">May 2026</div> -->
     </div>
   </section>
 
@@ -657,7 +658,7 @@
         Resume
       </a>
       <div class="contact-boxie">
-        <div class="contact-boxie-bubble">Email copied! 📋</div>
+        <div class="contact-boxie-bubble">Got a dataset? 👀</div>
         <img src="boxie.png" alt="Boxie" />
       </div>
     </div>
@@ -683,7 +684,7 @@
         company: "SoFi",
         title: "Data Scientist, Risk Analytics",
         date: "July 2026",
-        desc: "Building machine learning models for risk analytics and fraud detection",
+        desc: "Building machine learning models for risk analytics and fraud detection.",
         skills: ["Python", "SQL", "dbt", "Snowflake"]
       },
       {
@@ -722,7 +723,7 @@
         company: "Berkeley Operations and Behavioral Analytics Lab",
         title: "ML Research Assistant",
         date: "September 2023 – August 2024",
-        desc: "Researched how reinforcement learning can surface interpretable insights to improve human decision-making, using clustering and Markov decision processes to model behavioral patterns from experimental data. Precise or Broad? Designing Algorithmic Advice for Learning in Sequential Decision Making",
+        desc: "Researched how reinforcement learning can surface interpretable insights to improve human decision-making, using clustering and Markov decision processes to model behavioral patterns from experimental data. Contributed to research published in Management Science.",
         skills: ["Python", "Pandas", "scikit-learn", "K-Means", "Markov Decision Processes"]
       },
       {
@@ -833,13 +834,16 @@
     });
 
     /* ── Contact Boxie click-to-copy ── */
-    document.querySelector('.contact-boxie').addEventListener('click', () => {
-      const cb = document.querySelector('.contact-boxie');
-      if (cb.classList.contains('copied')) {
-        cb.classList.remove('copied');
+    const contactBoxie = document.querySelector('.contact-boxie');
+    const contactBubble = contactBoxie.querySelector('.contact-boxie-bubble');
+    contactBoxie.addEventListener('click', () => {
+      if (contactBoxie.classList.contains('copied')) {
+        contactBoxie.classList.remove('copied');
+        contactBubble.textContent = 'Got a dataset? 👀';
       } else {
         navigator.clipboard.writeText('tranamy@berkeley.edu');
-        cb.classList.add('copied');
+        contactBubble.textContent = 'Email copied! 📋';
+        contactBoxie.classList.add('copied');
       }
     });
 
