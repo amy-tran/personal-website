@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amy Tran</title>
+  <link rel="icon" type="image/png" href="boxie.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Variables ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fbfbfb;
+      --text: #1a1a1a;
+      --muted: #666;
+      --blue: #3559B7;
+      --blue-light: #e8eef7;
+      --border: #e8e8e8;
+      --radius: 12px;
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; cursor: none; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Custom Cursor ── */
+    #cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--blue);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+    }
+    #cursor-ring {
+      position: fixed;
+      width: 32px; height: 32px;
+      border: 1.5px solid var(--blue);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+      opacity: 0.5;
+    }
+    body.hovering #cursor { width: 14px; height: 14px; background: var(--blue); }
+    body.hovering #cursor-ring { width: 44px; height: 44px; opacity: 0.3; }
+
+    /* ── Navbar ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 6vw;
+      background: rgba(251,251,251,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-color: var(--border); }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo img {
+      height: 36px;
+      display: block;
+      cursor: none;
+    }
+    .nav-boxie {
+      height: 36px;
+      width: auto;
+    }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      color: var(--text);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 2px;
+      cursor: none;
+      transition: color 0.2s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -1px; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--blue);
+      transition: width 0.25s ease;
+    }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ── Sections ── */
+    section { padding: 100px 6vw; max-width: 960px; margin: 0 auto; }
+    section:first-of-type { padding-top: 140px; }
+
+    .section-label {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: var(--muted);
+      margin-bottom: 10px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Hero ── */
+    #home {
+      padding-top: 140px;
+      padding-bottom: 36px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 60px;
+      align-items: start;
+    }
+    .hero-text {
+      margin-top: 5px;
+    }
+    .hero-text h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      line-height: 1.2;
+      font-weight: 400;
+      margin-bottom: 28px;
+      color: var(--text);
+    }
+    .hero-text h1 em {
+      font-style: italic;
+      color: var(--blue);
+    }
+    .hero-text p {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+      max-width: 480px;
+      margin-bottom: 16px;
+    }
+    .hero-text p:last-of-type { margin-bottom: 0; }
+    .hero-connect {
+      display: inline-block;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--blue);
+      text-decoration: none;
+      cursor: none;
+      margin-top: 16px;
+      border-bottom: 1.5px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .hero-connect:hover { border-color: var(--blue); }
+
+    /* Hero image + Boxie */
+    .hero-image-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hero-photo-container {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+    }
+    .hero-photo {
+      width: 100%;
+      border-radius: 10px;
+      display: block;
+      object-fit: cover;
+      aspect-ratio: 3/4;
+      background: var(--blue-light);
+      transform: scaleX(-1);
+    }
+    .boxie-wrap {
+      position: absolute;
+      bottom: -38px;
+      left: -32px;
+      width: 116px;
+      cursor: none;
+      z-index: 2;
+    }
+    .boxie-wrap img {
+      width: 100%;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-origin: center center;
+    }
+    .boxie-wrap:hover img { transform: rotate(360deg); }
+    .boxie-caption {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 2px;
+      align-self: center;
+      width: 100%;
+      max-width: 320px;
+      padding-left: 70px;
+    }
+    .boxie-caption-arrow {
+      width: 44px;
+      flex-shrink: 0;
+      margin-top: 12px;
+      margin-left: 0px;
+      transform: rotate(19deg);
+    }
+    .boxie-caption-text {
+      font-size: 14px;
+      color: var(--muted);
+      font-style: italic;
+      line-height: 1.5;
+      padding-top: 8px;
+    }
+
+    /* ── Work ── */
+    #work { padding-top: 80px; padding-bottom: 16px; }
+    .work-list { display: flex; flex-direction: column; }
+
+    .work-item {
+      overflow: hidden;
+      transition: background 0.2s;
+    }
+
+    .work-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+      cursor: none;
+      user-select: none;
+      transition: opacity 0.2s;
+    }
+    .work-header:hover { opacity: 0.7; }
+    .work-header-left { display: flex; flex-direction: column; gap: 3px; }
+    .work-company {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+    }
+    .work-title {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .work-header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .work-date {
+      font-size: 14px;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+      margin-top: -18px;
+    }
+    .work-toggle-icon {
+      width: 20px; height: 20px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      opacity: 0.4;
+      transition: opacity 0.2s;
+    }
+    .work-toggle-icon svg { transition: transform 0.3s; }
+    .work-item.open .work-toggle-icon { opacity: 1; }
+    .work-item.open .work-toggle-icon svg { transform: rotate(180deg); }
+
+    .work-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .work-item.open .work-body { max-height: 300px; }
+    .work-item.open.has-posters .work-body { max-height: 4000px; }
+    .work-body-inner {
+      padding: 0 0 22px;
+      display: flex;
+      flex-direction: column;
+    }
+    .work-desc {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 14px;
+      width: 100%;
+    }
+    .work-skills {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .work-posters {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .work-poster-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+    .work-poster img {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+    .skill-tag {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 10px;
+      background: var(--blue-light);
+      color: var(--blue);
+      border-radius: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Education ── */
+    #education { padding-top: 80px; padding-bottom: 16px; }
+    .edu-card {
+      padding: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .edu-card > div:first-child { flex: 1; }
+    .edu-school {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 3px;
+    }
+    .edu-degree {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .edu-meta {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 0;
+    }
+    .edu-date {
+      font-size: 14px;
+      color: var(--muted);
+      white-space: nowrap;
+      text-align: right;
+      margin-top: 4px;
+    }
+    .cert-link {
+      color: var(--muted);
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      cursor: none;
+      transition: color 0.2s;
+    }
+    .cert-link:hover { color: var(--blue); }
+
+    /* ── Skills ── */
+    #skills { padding-top: 80px; padding-bottom: 16px; }
+    .skills-list { display: flex; flex-direction: column; }
+    .skill-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 34px;
+      padding: 18px 0;
+    }
+    .skill-row-label {
+      font-family: var(--sans);
+      font-size: 16px;
+      color: var(--muted);
+      min-width: 80px;
+      width: 80px;
+      flex-shrink: 0;
+      padding-top: 4px;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .skill-tags span {
+      font-size: 12px;
+      padding: 3px 9px;
+      background: var(--blue-light);
+      color: var(--blue);
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    /* ── Contact ── */
+    #contact { padding-top: 80px; padding-bottom: 120px; text-align: center; }
+    #contact h3 {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 32px;
+    }
+    #contact h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400;
+      margin-bottom: 16px;
+    }
+    #contact p {
+      color: var(--muted);
+      max-width: 400px;
+      margin: 0 auto 36px;
+      font-size: 15px;
+    }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      cursor: none;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .contact-link:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+    .contact-link.primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+    .contact-link.primary:hover { background: #2847a0; }
+
+    .contact-boxie {
+      position: relative;
+      display: flex;
+      align-items: center;
+      cursor: none;
+      margin-left: 4px;
+    }
+    .contact-boxie img {
+      height: 55px;
+      width: auto;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-origin: center bottom;
+    }
+    .contact-boxie:hover img { transform: rotate(360deg); }
+    .contact-boxie-bubble {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(6px);
+      background: var(--text);
+      color: #fff;
+      font-size: 14px;
+      font-family: var(--sans);
+      padding: 6px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .contact-boxie-bubble::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--text);
+    }
+    .contact-boxie:hover .contact-boxie-bubble {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 6vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 100%;
+    }
+
+    /* ── Back to Top ── */
+    #back-top {
+      position: fixed;
+      bottom: 32px; right: 32px;
+      width: 40px; height: 40px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: none;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 90;
+    }
+    #back-top.visible { opacity: 1; transform: translateY(0); }
+    #back-top:hover { background: #2847a0; }
+
+    /* ── Fade-in on scroll ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      #home { grid-template-columns: 1fr; padding-top: 120px; }
+      .hero-image-wrap { order: -1; }
+      .hero-photo { max-width: 260px; }
+      .skill-row { flex-direction: column; gap: 10px; }
+      .skill-row-label { min-width: unset; }
+      .edu-card { flex-direction: column; }
+      nav { padding: 16px 5vw; }
+      .nav-links { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- Navbar -->
+  <nav id="navbar">
+    <a href="#home" class="nav-logo">
+      <span style="font-family:DM Serif Display,serif;font-size:25px;color:#1a1a1a">Amy Tran</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#work">Work Experience</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section id="home">
+    <div class="hero-text reveal">
+      <p>I'm an incoming Data Scientist at SoFi, where I will be building machine learning models for risk analytics and fraud detection.</p>
+      <p>I studied Data Science and Social Welfare at UC Berkeley, two fields that share a question I keep returning to: what do the systems we build actually do to people?</p>
+      <p>Before SoFi, I worked on generative AI at Credit Karma, baseball analytics in the Oakland A's front office, and reinforcement learning research at Berkeley.</p>
+      <p>Outside of work I enjoy lifting, arranging flowers, and wandering through museums. </p>
+      <a href="#contact" class="hero-connect">Always happy to connect!</a>
+    </div>
+    <div class="hero-image-wrap reveal">
+      <div class="hero-photo-container">
+        <img class="hero-photo" src="amy-photo.jpg" alt="Amy Tran" onerror="this.style.background='#e8eef7'" />
+        <div class="boxie-wrap">
+          <img src="boxie.png" alt="Boxie" />
+        </div>
+      </div>
+      <div class="boxie-caption">
+        <img class="boxie-caption-arrow" src="squiggle.png" alt="" />
+        <span class="boxie-caption-text">meet boxie, your friendly<br>neighborhood box plot!</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section id="work">
+    <div class="section-label">Work Experience</div>
+    <div class="work-list" id="workList"></div>
+  </section>
+
+  <!-- Education -->
+  <section id="education">
+    <div class="section-label">Education</div>
+    <div class="edu-card reveal">
+      <div>
+        <div class="edu-school">University of California, Berkeley</div>
+        <div class="edu-degree">Bachelor of Arts (B.A.) Data Science, Social Welfare Domain Emphasis</div>
+        <div class="edu-meta">Completed in 3 years</div>
+        <div class="edu-meta" style="margin-top: 6px;">Awards: Gates Scholar · LinkedIn Possibilities in Tech Scholar · Girls Who Invest Scholar · UC Berkeley LLM Research Award</div>
+        <div class="edu-meta" style="margin-top: 6px;">Certifications: <a class="cert-link" href="https://credentials.cfainstitute.org/b432972a-d3e7-4629-8cc0-b795e37e3076#acc.EqXZxAlP" target="_blank">CFA Institute (Investments)</a> · <a class="cert-link" href="https://achievements.wharton.upenn.edu/376d43f8-c78a-4e09-a090-8c6717039a8f#acc.XYQFPfNC" target="_blank">Wharton Online (Investment Management)</a> · Wall Street Prep (<a class="cert-link" href="https://certification.wallstreetprep.com/8377908a-e38c-46d4-86c0-58f8d21268c4#acc.vWStCXMm" target="_blank">Accounting</a>, <a class="cert-link" href="https://certification.wallstreetprep.com/fcbf8187-a0c3-4284-a599-6b9b785133e1#acc.BmGMPRCz" target="_blank">Financial Statement Analysis</a>, <a class="cert-link" href="https://certification.wallstreetprep.com/f0d3afbd-aeee-4155-b76c-582e92580a9d#acc.i1vdTGCu" target="_blank">Excel</a>)</div>
+      </div>
+      <div class="edu-date">May 2026</div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills">
+    <div class="section-label">Skills</div>
+    <div class="skills-list" id="skillsGrid"></div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="section-label">Contact</div>
+    <h3>Happy to talk data, swap lifting tips, or just say hello!</h3>
+    <div class="contact-links reveal">
+      <a href="mailto:tranamy@berkeley.edu" class="contact-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        Email
+      </a>
+      <a href="https://www.linkedin.com/in/amytr/" target="_blank" class="contact-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <a href="http://github.com/amy-tran" target="_blank" class="contact-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        GitHub
+      </a>
+      <a href="https://drive.google.com/file/d/1VecgVvuQWj5gxZFVFuDlufYIWnJwwPlD/view?usp=sharing" target="_blank" class="contact-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        Resume
+      </a>
+      <div class="contact-boxie">
+        <div class="contact-boxie-bubble">Got a dataset? 👀</div>
+        <img src="boxie.png" alt="Boxie" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <span>Amy Tran</span>
+    <span>Made in Oakland, CA · Last Updated May 2026</span>
+  </footer>
+
+  <!-- Back to Top -->
+  <button id="back-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M7 11V3M3 7l4-4 4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <script>
+    /* ── Data ── */
+    const workData = [
+      {
+        company: "SoFi",
+        title: "Data Scientist, Risk Analytics",
+        date: "July 2026",
+        desc: "Building machine learning models for risk analytics and fraud detection",
+        skills: ["Python", "SQL", "dbt", "Snowflake"]
+      },
+      {
+        company: "Gilead Sciences",
+        title: "AI/ML Research Intern",
+        date: "August 2025 – May 2026",
+        desc: "Built a sentiment analysis pipeline comparing LLM performance (Claude, Llama, FinBERT) across 480+ Wall Street analyst reports, validating against human ratings with strong inter-rater reliability and identifying optimal chunking strategies through A/B testing. Extended research into quantitative forecasting using XGBoost and ARIMA with walk-forward validation and Diebold-Mariano significance testing to evaluate whether analyst sentiment improves stock price prediction beyond market-only baselines across 35 firms.",
+        skills: ["Python", "R", "Time Series", "ARIMA", "XGBoost", "Diebold Mariano"],
+        posters: [
+          { label: "Poster 1: Sentiment Pipeline · LLM Research Award", src: "gilead-poster1.png" },
+          { label: "Poster 2: Quantitative Forecasting · Honorable Mention", src: "gilead-poster2.png" }
+        ]
+      },
+      {
+        company: "SoFi",
+        title: "Complaints Analytics Intern",
+        date: "May 2025 – August 2025",
+        desc: "Built a two-part NLP classification system using logistic regression and TF-IDF to classify ~1,500 complaints monthly by regulatory relevance with 94% accuracy and tag specific regulations with 100% partial match accuracy across 15 text and categorical fields. Adopted into production via Snowflake, cutting manual compliance review by 170+ hours per month in alignment with Model Risk Management standards (SR 11-7).",
+        skills: ["Python", "SQL", "Pandas", "Snowflake", "Logistic Regression", "Google Apps Script"]
+      },
+      {
+        company: "Cal Baseball",
+        title: "Head of Data Analytics",
+        date: "October 2024 – June 2026",
+        desc: "Led a team of 6 to build a pitcher deception model with 91% accuracy, adopted by coaching staff for all starting pitchers and improving pitch tunneling by 21%. Built a recruitment tracking tool consolidating transfer portal and international player data, reducing time coaches spent on manual tracking.",
+        skills: ["Python", "Regressions", "Predictive Modelling", "JavaScript", "Supabase", "HTML", "CSS"]
+      },
+      {
+        company: "Oakland Athletics",
+        title: "Data Analytics Intern",
+        date: "February 2024 – June 2024",
+        desc: "Analyzed batting swing mechanics and produced visualizations used by scouts and coaches to inform 2024 MLB Draft decisions. Built 11 data integrity reports reducing data inconsistencies by 30%, and developed 5 new datasets that cut player administration preparation time by 2 hours per week.",
+        skills: ["Python", "SQL", "Microsoft SQL Server", "Matplotlib", "Seaborn"]
+      },
+      {
+        company: "Berkeley Operations and Behavioral Analytics Lab",
+        title: "ML Research Assistant",
+        date: "September 2023 – August 2024",
+        desc: "Researched how reinforcement learning can surface interpretable insights to improve human decision-making, using clustering and Markov decision processes to model behavioral patterns from experimental data. Precise or Broad? Designing Algorithmic Advice for Learning in Sequential Decision Making",
+        skills: ["Python", "Pandas", "scikit-learn", "K-Means", "Markov Decision Processes"]
+      },
+      {
+        company: "Intuit Credit Karma",
+        title: "Technical Program Manager Intern",
+        date: "June 2023 – August 2023",
+        desc: "Conducted usability research on Intuit Assist with 100+ users, identifying key pain points, and reduced internal processing time by 87% through prompt engineering.",
+        skills: ["LLMs", "Prompt Engineering", "Sentiment Analysis", "Qualitative Analysis"]
+      }
+    ];
+
+    const skillsData = [
+      {
+        title: "Languages",
+        items: ["Python", "SQL", "R", "Java", "JavaScript", "HTML", "CSS", "Vietnamese (Oral Fluency)"]
+      },
+      {
+        title: "Libraries & Frameworks",
+        items: ["Pandas", "NumPy", "Scikit-learn", "Matplotlib", "Seaborn", "Plotly", "Scipy", "dbt", "LangGraph", "HuggingFace Transformers"]
+      },
+      {
+        title: "Platforms & Tools",
+        items: ["Snowflake", "Databricks", "AWS", "Supabase", "Tableau", "Power BI", "Looker", "Streamlit", "Git", "Jupyter Notebook", "MS Excel", "Deepnote", "Google Colab", "VS Code", "IntelliJ", "Notion", "Asana", "Google Sheets", "Google Apps Script"]
+      },
+      {
+        title: "ML & Stats",
+        items: ["PyTorch", "Regressions", "Logistic Regression", "Classification", "Clustering", "Feature Engineering", "Time Series", "NLP", "Sentiment Analysis", "Transformers", "Neural Networks", "LLMs", "A/B Testing", "Predictive Modeling", "Bayesian Inference"]
+      }
+    ];
+
+    /* ── Render Work ── */
+    const workList = document.getElementById('workList');
+    workData.forEach((job, i) => {
+      const item = document.createElement('div');
+      item.className = `work-item reveal${job.posters ? ' has-posters' : ''}`;
+      item.style.transitionDelay = `${i * 0.05}s`;
+      item.innerHTML = `
+        <div class="work-header">
+          <div class="work-header-left">
+            <span class="work-company">${job.company}</span>
+            <span class="work-title">${job.title}</span>
+          </div>
+          <div class="work-header-right">
+            <span class="work-date">${job.date}</span>
+            <div class="work-toggle-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M2 4l4 4 4-4" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="work-body">
+          <div class="work-body-inner">
+            <p class="work-desc">${job.desc}</p>
+            <div class="work-skills">${job.skills.map(s => `<span class="skill-tag">${s}</span>`).join('')}</div>
+            ${job.posters ? `<div class="work-posters">${job.posters.map(p => `<div class="work-poster"><span class="work-poster-label">${p.label}</span><img src="${p.src}" alt="${p.label}" /></div>`).join('')}</div>` : ''}
+          </div>
+        </div>
+      `;
+      item.querySelector('.work-header').addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.work-item.open').forEach(el => el.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+      workList.appendChild(item);
+    });
+
+    /* ── Render Skills ── */
+    const skillsGrid = document.getElementById('skillsGrid');
+    skillsData.forEach((cat, i) => {
+      const row = document.createElement('div');
+      row.className = 'skill-row reveal';
+      row.style.transitionDelay = `${i * 0.08}s`;
+      row.innerHTML = `
+        <span class="skill-row-label">${cat.title}</span>
+        <div class="skill-tags">${cat.items.map(s => `<span>${s}</span>`).join('')}</div>
+      `;
+      skillsGrid.appendChild(row);
+    });
+
+    /* ── Custom Cursor ── */
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    function animateCursor() {
+      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+    document.querySelectorAll('a, button, .work-header, .boxie-wrap').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
+
+    /* ── Navbar scroll ── */
+    const navbar = document.getElementById('navbar');
+    const backTop = document.getElementById('back-top');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
+      backTop.classList.toggle('visible', window.scrollY > 400);
+    });
+
+    /* ── Reveal on scroll ── */
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
