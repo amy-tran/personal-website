@@ -379,6 +379,13 @@
       color: var(--muted);
       font-weight: 400;
     }
+    .work-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 400;
+      font-style: italic;
+      opacity: 0.8;
+    }
     .work-header-right {
       display: flex;
       align-items: center;
@@ -944,6 +951,7 @@
       {
         company: "SoFi",
         title: "Data Scientist, Risk Analytics",
+        subtitle: "Building production ML systems for financial risk.",
         date: "July 2026",
         desc: "Building machine learning models for risk analytics.",
         skills: ["Python", "SQL", "dbt", "Snowflake"]
@@ -951,6 +959,7 @@
       {
         company: "Gilead Sciences",
         title: "AI/ML Research Intern",
+        subtitle: "Tested whether analyst sentiment predicts stock price beyond market-only baselines.",
         date: "August 2025 – May 2026",
         desc: "Built a sentiment analysis pipeline comparing LLM performance (Claude, Llama, FinBERT) across 480+ Wall Street analyst reports, validating against human ratings with strong inter-rater reliability and identifying optimal chunking strategies through A/B testing. Extended research into quantitative forecasting using XGBoost and ARIMA with walk-forward validation and Diebold-Mariano significance testing to evaluate whether analyst sentiment improves stock price prediction beyond market-only baselines across 35 firms.",
         skills: ["Python", "R", "Time Series", "ARIMA", "XGBoost", "Diebold Mariano"],
@@ -962,6 +971,7 @@
       {
         company: "SoFi",
         title: "Complaints Analytics Intern",
+        subtitle: "Automated compliance review: 94% accuracy, hours saved monthly, shipped to production.",
         date: "May 2025 – August 2025",
         desc: "Built a two-part NLP classification system using logistic regression and TF-IDF to classify ~1,500 complaints monthly by regulatory relevance with 94% accuracy and tag specific regulations with 100% partial match accuracy across 15 text and categorical fields. Adopted into production via Snowflake, cutting manual compliance review time monthly in alignment with Model Risk Management standards (SR 11-7).",
         skills: ["Python", "SQL", "Pandas", "Snowflake", "Logistic Regression", "Google Apps Script"]
@@ -969,6 +979,7 @@
       {
         company: "Cal Baseball",
         title: "Head of Data Analytics",
+        subtitle: "Pitcher deception model at 91% accuracy, adopted for all starting pitchers.",
         date: "October 2024 – June 2026",
         desc: "Led a team of 6 to build a pitcher deception model with 91% accuracy, adopted by coaching staff for all starting pitchers and improving pitch tunneling by 21%. Built a recruitment tracking tool consolidating transfer portal and international player data, reducing time coaches spent on manual tracking.",
         skills: ["Python", "Regressions", "Predictive Modelling", "JavaScript", "Supabase", "HTML", "CSS"]
@@ -976,6 +987,7 @@
       {
         company: "Oakland Athletics",
         title: "Data Analytics Intern",
+        subtitle: "Swing mechanics analysis informing 2024 MLB Draft decisions.",
         date: "February 2024 – June 2024",
         desc: "Analyzed batting swing mechanics and produced visualizations used by scouts and coaches to inform 2024 MLB Draft decisions. Built 11 data integrity reports reducing data inconsistencies by 30%, and developed 5 new datasets that cut player administration preparation time by 2 hours per week.",
         skills: ["Python", "SQL", "Microsoft SQL Server", "Matplotlib", "Seaborn"]
@@ -983,6 +995,7 @@
       {
         company: "Berkeley Operations and Behavioral Analytics Lab",
         title: "ML Research Assistant",
+        subtitle: "RL research on human decision-making, contributing to a Management Science publication.",
         date: "September 2023 – August 2024",
         desc: "Researched how reinforcement learning can surface interpretable insights to improve human decision-making, using clustering and Markov decision processes to model behavioral patterns from experimental data<span class=\"mobile-only\"> in the Berkeley Operations and Behavioral Analytics Lab</span>. Contributed to research published in Management Science.",
         skills: ["Python", "Pandas", "scikit-learn", "K-Means", "Markov Decision Processes"]
@@ -990,6 +1003,7 @@
       {
         company: "Intuit Credit Karma",
         title: "Technical Program Manager Intern",
+        subtitle: "Reduced internal processing time 87% through prompt engineering on Intuit Assist.",
         date: "June 2023 – August 2023",
         desc: "Conducted usability research on Intuit Assist with 100+ users, identifying key pain points, and reduced internal processing time by 87% through prompt engineering.",
         skills: ["LLMs", "Prompt Engineering", "Sentiment Analysis", "Qualitative Analysis"]
@@ -1027,6 +1041,7 @@
             <span class="work-company work-company-full">${job.company}</span>
             <span class="work-company work-company-short">${shortCompany(job.company)}</span>
             <span class="work-title">${job.title}</span>
+            ${job.subtitle ? `<span class="work-subtitle">${job.subtitle}</span>` : ''}
           </div>
           <div class="work-header-right">
             <span class="work-date work-date-full">${job.date}</span>
